@@ -116,62 +116,40 @@ public class ResourcePool<R>{
 	reentrant lock.  Stores return value (if any) in Result class.
 */
 	public Result unlockPool(int op, R resource){
-		Result result;
+		Result result = null;
 		lock.lock();
 		if (op == 0){         //R     Integer          Boolean
 			result = new Result(null, availableSafe(), false);
-			lock.unlock();
-			return result;
 		}
 		else if (op == 1){
 			result = new Result(null, 0, isOpenSafe());
-			lock.unlock();
-			return result;
 		}
 		else if (op == 2){
 			openSafe();
-			lock.unlock();
-			return null;
 		}
 		else if (op == 3){		
 			result = new Result(null, 0, closeSafe());
-			lock.unlock();
-			return result;
 		}
 		else if (op == 4){
 			closeNowSafe();
-			lock.unlock();
-			return null;
 		}
 		else if (op == 5){
 			result = new Result(null, 0, addSafe(resource));
-			lock.unlock();
-			return result;
 		}
 		else if (op == 6){
 			result = new Result(acquireSafe(), 0, false);
-			lock.unlock();
-			return result;
 		}
 		else if (op == 7){
 			releaseSafe(resource);
-			lock.unlock();
-			return null;
 		}
 		else if (op == 8){
 			result = new Result(null, removeSafe(resource), false);
-			lock.unlock();
-			return result;
 		}
 		else if (op == 9){
 			result = new Result(null, 0, removeNowSafe(resource));
-			lock.unlock();
-			return result;
 		}
-		else{
-			lock.unlock();
-			return null;
-		}
+		lock.unlock();
+		return result;
 	}
 /*
 	Thread-safe methods accessed through unlockPool
